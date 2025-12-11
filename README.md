@@ -1,44 +1,55 @@
 # Incident Response Demo
 
-Lightweight demo that walks through a broken login after a bad release, inspects mocked observability data via MCP servers, applies a config fix, and proves the login works again.
+Broken login after a bad release, mocked observability via MCP, Codex fixes it, then we prove the login works and close the loop.
 
 ## Prereqs
 - Node 18+ (tested with Node 24)
-- No external services or dependencies required
+- No network or external services needed
+- Credentials: `demo@example.com` / `password1`
 
-## Quick start
-1) Start the app server: `npm start` (serves at http://localhost:3000)
-2) Start all mocked MCP servers in one terminal: `npm run start:mcps`
-   - Or run individually in separate terminals if you prefer:
-     - `node servers/mock-cloudwatch-mcp.js`
-     - `node servers/mock-datadog-mcp.js`
-     - `node servers/mock-config-mcp.js`
-3) Open the app in a browser. Use `demo@example.com` / `password1`.
-   - With the current broken config, login fails (post-release salt drift).
-4) Use Codex CLI to call the MCP tools:
-   - CloudWatch: `search_logs`, `tail_errors`
-   - Datadog: `get_trace_by_request_id`, `summarize_errors`
-   - Config: `get_runtime_config`, `diff_good_vs_active`
-5) Let Codex identify and apply the fix (align `runtime.active.json` to the good state).
-6) Retry login — succeeds and shows the dashboard.
+## Setup (one-time)
+```sh
+npm install
+```
 
-## Demo narrative (prompt crib sheet)
-- Reproduce: attempt login, see failure after release `release-2024.11.0`.
-- Ask Codex to query the MCP servers; the failing request/trace in fixtures is `req-8812` / `trace-4401` (also `req-7777` / `trace-5602` for the 500).
-- Codex summarizes logs/traces and the config diff pointing at the rotated salt.
-- Codex applies the fix by aligning `runtime.active.json` to `runtime.good.json`.
-- Re-run login → success → navigate dashboard → push Jira update.
-- Reset to broken state anytime: `npm run demo:reset-broken`.
+## Start services (every session)
+In separate terminals:
+```sh
+# 1) App server
+npm start   # http://localhost:3000
 
-### Fixture identifiers
-- CloudWatch log entries live in `fixtures/cloudwatch/auth-log.jsonl` and include `request_id` + `trace_id`.
-- Datadog traces live in `fixtures/datadog/traces.json` with the same IDs.
-- You won’t see these IDs in the browser UI or network tab; they’re in the mocked MCP data. Ask Codex to pull them via the MCP tools (e.g., `tail_errors` or `search_logs`), then follow the linked trace in Datadog.
+# 2) MCP servers (all at once)
+npm run start:mcps
+# or individually:
+# npm run start:mcp:cloudwatch
+# npm run start:mcp:datadog
+# npm run start:mcp:config
+```
+
+## Demo flow (step-by-step)
+1) Reproduce the break: open http://localhost:3000, log in with the creds above → it fails (active config is broken).
+2) Ask Codex to pull latest errors from MCPs:
+   - CloudWatch: `tail_errors({ limit: 5 })` or `search_logs({ contains: "salt rotation" })`
+   - Datadog: `summarize_errors()` then `get_trace_by_request_id({ request_id: "…" })`
+   - Config: `diff_good_vs_active({})`
+3) Have Codex explain root cause: salt drift (`demo-day-salt-v1-rotated` vs expected `demo-day-salt-v1`), so hashes don’t match.
+4) Have Codex apply the fix: align `fixtures/config/runtime.active.json` to `runtime.good.json` (or let Codex patch it).
+5) Refresh and log in again → dashboard shows “Everything back online” with next steps cards.
+6) (Optional) Narrate Jira/doc/test follow-ups from the dashboard cards.
+
+## Prompts you can reuse
+- “Use the mock MCPs to pull the latest login errors from CloudWatch, the matching trace from Datadog, and the config diff. Summarize the root cause and apply the fix so login succeeds.”
+- “After fixing, verify login at http://localhost:3000 succeeds, then summarize the RCA and next steps for Jira/docs/tests.”
+
+## Fixture identifiers
+- CloudWatch logs: `fixtures/cloudwatch/auth-log.jsonl` → has `request_id`/`trace_id`. Failing examples: `req-8812` / `trace-4401`, and `req-7777` / `trace-5602` (500).
+- Datadog traces: `fixtures/datadog/traces.json` with the same IDs.
+- These IDs are not in the browser UI; surface them via MCP tools.
 
 ## MCP tool reference
-All MCP servers speak stdio JSON-RPC (`Content-Length` framed) and read from `fixtures/`.
+All mocked, stdio JSON-RPC (`Content-Length` framed), read-only from `fixtures/`.
 
-Example Codex CLI config snippet:
+Example Codex CLI config:
 ```json
 {
   "mcpServers": {
@@ -65,9 +76,9 @@ Data: `fixtures/datadog/traces.json`
 Data: `fixtures/config/runtime.*.json`
 
 ## Resetting states
-- Broken (post-release failure): `npm run demo:reset-broken`
-- Fixed (pre-release good state, if you need to fast-forward): `npm run demo:apply-fix`
-If you want to re-run the demo loop manually, stash or reset your changes to `fixtures/config/runtime.active.json` and then `npm run demo:reset-broken`.
+- Broken (demo start): `npm run demo:reset-broken`
+- Fixed (if you need to fast-forward): `npm run demo:apply-fix`
+To re-run the loop, stash/reset changes to `fixtures/config/runtime.active.json` then reset to broken.
 
 ## Tests
 Run `npm test` (Node test runner). It asserts the broken login fails and the good config passes.
