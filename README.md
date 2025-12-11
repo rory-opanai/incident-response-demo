@@ -18,7 +18,7 @@ In separate terminals:
 # 1) App server
 npm start   # http://localhost:3000
 
-# 2) MCP servers (all at once)
+# 2) MCP servers (all at once) - All are mocked for now
 npm run start:mcps
 # or individually:
 # npm run start:mcp:cloudwatch
@@ -29,13 +29,19 @@ npm run start:mcps
 ## Demo flow (step-by-step)
 1) Reproduce the break: open http://localhost:3000, log in with the creds above → it fails (active config is broken).
 2) Ask Codex to pull latest errors from MCPs:
-   - CloudWatch: `tail_errors({ limit: 5 })` or `search_logs({ contains: "salt rotation" })`
-   - Datadog: `summarize_errors()` then `get_trace_by_request_id({ request_id: "…" })`
-   - Config: `diff_good_vs_active({})`
-3) Have Codex explain root cause: salt drift (`demo-day-salt-v1-rotated` vs expected `demo-day-salt-v1`), so hashes don’t match.
-4) Have Codex apply the fix: align `fixtures/config/runtime.active.json` to `runtime.good.json` (or let Codex patch it).
-5) Refresh and log in again → dashboard shows “Everything back online” with next steps cards.
-6) (Optional) Narrate Jira/doc/test follow-ups from the dashboard cards.
+   Prompt - "Pull the latest login errors from mock CloudWatch and summarize"
+            - this will return logs which will contain request IDs and trace IDs (e.g req-777, trace-5602)
+   Ask Codex to follow up and get the specifics using the request and trace IDs
+   Prompt - "› Fetch the trace for trace-5602 and trace-4401 from mock Datadog"   
+
+3) Have Codex explain root cause
+    Prompt - "summarise the issue you are seeing between Datadog and CloudWatch which is causing the user not to be able to
+  login, please also outline the suggested fix"
+4) Ask Codex to write test - Follow a TTD style of development 
+5) Have Codex apply the fix: 
+    Prompt - "Please implement the required fix"
+6) Refresh and log in again → dashboard shows “Everything back online” with next steps cards.
+7) Narrate Jira/doc follow-ups from the dashboard cards.
 
 ## Prompts you can reuse
 - “Use the mock MCPs to pull the latest login errors from CloudWatch, the matching trace from Datadog, and the config diff. Summarize the root cause and apply the fix so login succeeds.”
