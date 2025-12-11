@@ -14,9 +14,9 @@
       <header class="hero">
         <div>
           <p class="eyebrow">Day in the life</p>
-          <h1>Login</h1>
-          <p class="lede"></p>
+          <h1>Login reliability drill</h1>
         </div>
+        <div class="release-chip"></div>
       </header>
 
       <main class="shell">
@@ -26,7 +26,7 @@
               <p class="eyebrow">Auth Portal</p>
               <h2>Welcome back</h2>
             </div>
-            <div class="badge badge-warn">On-call: auth degraded</div>
+            <div class="badge badge-warn"></div>
           </div>
 
           <form id="loginForm">
@@ -76,21 +76,94 @@
               <p class="metric" id="userRole">engineer</p>
             </div>
             <div class="card">
-              <p class="eyebrow">Next step</p>
-              <p class="metric">Ship the Jira update</p>
+              <p class="eyebrow">Release</p>
+              <p class="metric" id="releaseTagCard">release-?</p>
+            </div>
+            <div class="card">
+              <p class="eyebrow">Session health</p>
+              <p class="metric muted">Auth success, SLO 99.9%</p>
+            </div>
+            <div class="card">
+              <p class="eyebrow">Last error observed</p>
+              <p class="metric muted">AuthSaltMismatch cleared</p>
+            </div>
+            <div class="card">
+              <p class="eyebrow">Next action</p>
+              <p class="metric">Ship Jira update</p>
             </div>
           </div>
 
-          <div class="timeline">
-            <p class="eyebrow">Demo flow</p>
-            <ol>
-              <li>Observe failed login in auth portal</li>
-              <li>Pull logs, traces, and config diffs from MCP servers</li>
-              <li>Patch runtime config through Codex</li>
-              <li>Retry login to confirm the fix</li>
-              <li>Close the ticket with notes and tests</li>
-            </ol>
+          <div class="next-steps">
+            <div class="next-steps-header">
+              <div>
+                <p class="eyebrow">Next steps</p>
+                <h3>Close the loop after the fix</h3>
+                <p class="muted">
+                  Realistic post-incident flow: update Jira, land tests, and publish the doc before you hand off.
+                </p>
+              </div>
+              <div class="badge badge-ok soft">Stable</div>
+            </div>
+            <div class="next-steps-grid">
+              <div class="step-card">
+                <div class="step-label">1</div>
+                <div>
+                  <p class="step-title">Notify Jira ticket</p>
+                  <p class="muted small">Post the RCA, mention salt drift, link MCP evidence.</p>
+                </div>
+                <button class="chip">Send update</button>
+              </div>
+              <div class="step-card">
+                <div class="step-label">2</div>
+                <div>
+                  <p class="step-title">Lock in tests</p>
+                  <p class="muted small">Add regression for auth hashing and config diff guardrails.</p>
+                </div>
+                <button class="chip chip-ghost">Run tests</button>
+              </div>
+              <div class="step-card">
+                <div class="step-label">3</div>
+                <div>
+                  <p class="step-title">Publish notes</p>
+                  <p class="muted small">Share a short doc on salt rotation hygiene and MCP playbook.</p>
+                </div>
+                <button class="chip chip-ghost">Open doc</button>
+              </div>
+            </div>
           </div>
+
+          <div class="workstream">
+            <div>
+              <p class="eyebrow">Workstream</p>
+              <h3>Sample dashboard cards</h3>
+              <p class="muted">
+                Mirrors a real post-fix view: who is logged in, what changed, and what remains to ship.
+              </p>
+            </div>
+            <div class="work-grid">
+              <div class="work-card">
+                <p class="eyebrow">Jira</p>
+                <p class="metric">INC-482</p>
+                <p class="muted small">Awaiting update from Codex</p>
+              </div>
+              <div class="work-card">
+                <p class="eyebrow">Tests</p>
+                <p class="metric">Regression added</p>
+                <p class="muted small">Auth hash + config parity</p>
+              </div>
+              <div class="work-card">
+                <p class="eyebrow">Docs</p>
+                <p class="metric">RCA draft</p>
+                <p class="muted small">Salt rotation checklist</p>
+              </div>
+              <div class="work-card">
+                <p class="eyebrow">Monitoring</p>
+                <p class="metric">No new 4xx</p>
+                <p class="muted small">Trace: trace-4401 resolved</p>
+              </div>
+            </div>
+          </div>
+
         </section>
       </main>
     </div>

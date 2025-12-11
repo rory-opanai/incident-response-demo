@@ -4,13 +4,27 @@ const dashboard = document.getElementById('dashboard');
 const loginPanel = document.getElementById('loginPanel');
 const userEmail = document.getElementById('userEmail');
 const userRole = document.getElementById('userRole');
+const releaseTagHero = document.getElementById('releaseTagHero');
+const releaseTagCard = document.getElementById('releaseTagCard');
 const toggleVisibility = document.getElementById('toggleVisibility');
 
 init();
 
 function init() {
+  fetchRelease();
   loginForm.addEventListener('submit', onSubmit);
   toggleVisibility.addEventListener('click', onToggleVisibility);
+}
+
+async function fetchRelease() {
+  try {
+    const res = await fetch('/api/release');
+    if (!res.ok) return;
+    const data = await res.json();
+    setReleaseTag(data.releaseTag);
+  } catch (error) {
+    console.warn('Could not fetch release tag', error);
+  }
 }
 
 async function onSubmit(event) {
@@ -30,6 +44,10 @@ async function onSubmit(event) {
 
     const data = await res.json();
 
+    if (data.releaseTag) {
+      setReleaseTag(data.releaseTag);
+    }
+
     if (!res.ok) {
       renderError(data);
       return;
@@ -45,7 +63,7 @@ async function onSubmit(event) {
 
 function renderError(data) {
   const messages = {
-    invalid_password: 'Password does not match our records. Reset the credential or page on-call.',
+    invalid_password: 'Password does not match our records',
     unknown_user: 'User not found. Confirm the seeded accounts.',
     missing_salt: 'Auth salt missing from runtime config.',
     internal_error: 'Auth service error.'
@@ -71,4 +89,10 @@ function onToggleVisibility() {
   const isHidden = input.type === 'password';
   input.type = isHidden ? 'text' : 'password';
   toggleVisibility.textContent = isHidden ? 'Hide' : 'Show';
+}
+
+function setReleaseTag(tag) {
+  if (!tag) return;
+  releaseTagHero.textContent = tag;
+  releaseTagCard.textContent = tag;
 }

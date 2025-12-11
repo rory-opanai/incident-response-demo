@@ -81,6 +81,20 @@ body {
   letter-spacing: -0.02em;
 }
 
+.release-chip {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--accent);
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  font-weight: 600;
+  box-shadow: var(--shadow);
+}
+
+.release-tag {
+  color: #0f172a;
+}
+
 .eyebrow {
   margin: 0;
   font-size: 12px;
@@ -249,6 +263,11 @@ form {
   font-weight: 700;
 }
 
+.metric.muted {
+  color: #1f2937;
+  font-weight: 600;
+}
+
 .timeline {
   margin-top: 18px;
   border: 1px dashed var(--panel-border);
@@ -261,6 +280,105 @@ form {
   margin: 6px 0 0 16px;
   padding: 0;
   line-height: 1.6;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 13px;
+}
+
+.next-steps {
+  margin-top: 18px;
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 14px;
+  background: #f0f4ff;
+}
+
+.next-steps-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.next-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.step-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.step-label {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #1d4ed8;
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+
+.step-title {
+  margin: 0;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.chip {
+  border: none;
+  background: #e0f2fe;
+  color: #0f172a;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chip-ghost {
+  background: #eef2fb;
+}
+
+.workstream {
+  margin-top: 16px;
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.work-card {
+  border: 1px solid var(--panel-border);
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.08);
+}
+
+.badge.soft {
+  background: rgba(22, 163, 74, 0.1);
+  color: #065f46;
 }
 
 @media (max-width: 900px) {
