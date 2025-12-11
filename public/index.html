@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Incident Response Demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="bg-grid"></div>
+    <div class="orb orb-one"></div>
+    <div class="orb orb-two"></div>
+    <div class="page">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Day in the life</p>
+          <h1>Login</h1>
+          <p class="lede"></p>
+        </div>
+      </header>
+
+      <main class="shell">
+        <section class="panel login-panel" id="loginPanel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Auth Portal</p>
+              <h2>Welcome back</h2>
+            </div>
+            <div class="badge badge-warn">On-call: auth degraded</div>
+          </div>
+
+          <form id="loginForm">
+            <label class="field">
+              <span>Email</span>
+              <input id="email" name="email" type="email" value="demo@example.com" required />
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <div class="password-row">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  value="password1"
+                  required
+                />
+                <button class="ghost-button" type="button" id="toggleVisibility">Show</button>
+              </div>
+            </label>
+            <div class="status" id="status"></div>
+            <button type="submit" class="cta">Log in</button>
+            <p class="helper">
+              Tip: Start with the known credentials above. During the current incident, authentication
+              will fail until the config is fixed.
+            </p>
+          </form>
+        </section>
+
+        <section class="panel dashboard hidden" id="dashboard">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Dashboard</p>
+              <h2>Everything back online</h2>
+            </div>
+            <div class="badge badge-ok">Authenticated</div>
+          </div>
+
+          <div class="grid">
+            <div class="card">
+              <p class="eyebrow">User</p>
+              <p class="metric" id="userEmail">demo@example.com</p>
+            </div>
+            <div class="card">
+              <p class="eyebrow">Role</p>
+              <p class="metric" id="userRole">engineer</p>
+            </div>
+            <div class="card">
+              <p class="eyebrow">Next step</p>
+              <p class="metric">Ship the Jira update</p>
+            </div>
+          </div>
+
+          <div class="timeline">
+            <p class="eyebrow">Demo flow</p>
+            <ol>
+              <li>Observe failed login in auth portal</li>
+              <li>Pull logs, traces, and config diffs from MCP servers</li>
+              <li>Patch runtime config through Codex</li>
+              <li>Retry login to confirm the fix</li>
+              <li>Close the ticket with notes and tests</li>
+            </ol>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

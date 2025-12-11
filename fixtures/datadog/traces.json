@@ -1,0 +1,83 @@
+[
+  {
+    "request_id": "req-8812",
+    "trace_id": "trace-4401",
+    "release_tag": "release-2024.11.0",
+    "timestamp": "2024-11-03T09:12:21.400Z",
+    "status": "error",
+    "spans": [
+      {
+        "name": "POST /api/login",
+        "service": "edge-gateway",
+        "duration_ms": 12
+      },
+      {
+        "name": "validateCredentials",
+        "service": "auth-service",
+        "duration_ms": 4,
+        "meta": {
+          "salt": "demo-day-salt-v1-rotated"
+        }
+      }
+    ],
+    "errors": [
+      {
+        "type": "AuthSaltMismatch",
+        "message": "hash mismatch after salt rotation",
+        "service": "auth-service"
+      }
+    ]
+  },
+  {
+    "request_id": "req-7777",
+    "trace_id": "trace-5602",
+    "release_tag": "release-2024.11.0",
+    "timestamp": "2024-11-03T09:12:22.400Z",
+    "status": "error",
+    "spans": [
+      {
+        "name": "POST /api/login",
+        "service": "edge-gateway",
+        "duration_ms": 11
+      },
+      {
+        "name": "hashPassword",
+        "service": "auth-service",
+        "duration_ms": 3,
+        "meta": {
+          "salt": "demo-day-salt-v1-rotated"
+        }
+      }
+    ],
+    "errors": [
+      {
+        "type": "CredentialHashMismatch",
+        "message": "password hash does not match stored digest",
+        "service": "auth-service"
+      }
+    ]
+  },
+  {
+    "request_id": "req-3011",
+    "trace_id": "trace-1111",
+    "release_tag": "release-2024.10.29",
+    "timestamp": "2024-10-29T15:45:02.000Z",
+    "status": "ok",
+    "spans": [
+      {
+        "name": "POST /api/login",
+        "service": "edge-gateway",
+        "duration_ms": 10
+      },
+      {
+        "name": "validateCredentials",
+        "service": "auth-service",
+        "duration_ms": 3,
+        "meta": {
+          "salt": "demo-day-salt-v1"
+        }
+      }
+    ],
+    "errors": []
+  }
+]

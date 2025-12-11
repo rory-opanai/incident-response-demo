@@ -1,0 +1,17 @@
+{
+  "releaseTag": "release-2024.10.29",
+  "auth": {
+    "salt": "demo-day-salt-v1",
+    "users": [
+      {
+        "email": "demo@example.com",
+        "role": "engineer",
+        "passwordHash": "8a489178fa92d4cca74f1bd8dbe5f7fd4801934d715c7d64443a46b1f618c0bf118c4cadf0bf8162e3b4c2600c812331ab70420ce7c8a1493b50ede98e497998"
+      }
+    ]
+  },
+  "features": {
+    "loginBanner": "Welcome back — status green",
+    "dashboardCards": 4
+  }
+}

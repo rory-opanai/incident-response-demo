@@ -1,0 +1,17 @@
+{
+  "name": "incident-response-demo",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "NODE_ENV=development node src/server.js",
+    "test": "node --test",
+    "start:mcps": "node scripts/start-mcps.js",
+    "start:mcp:cloudwatch": "node servers/mock-cloudwatch-mcp.js",
+    "start:mcp:datadog": "node servers/mock-datadog-mcp.js",
+    "start:mcp:config": "node servers/mock-config-mcp.js",
+    "demo:apply-fix": "node scripts/set-config-state.js good",
+    "demo:reset-broken": "node scripts/set-config-state.js broken"
+  }
+}
