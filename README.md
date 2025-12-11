@@ -24,11 +24,16 @@ Lightweight demo that walks through a broken login after a bad release, inspects
 
 ## Demo narrative (prompt crib sheet)
 - Reproduce: attempt login, see failure after release `release-2024.11.0`.
-- Ask Codex to query the MCP servers for request `req-8812` / trace `trace-4401`.
+- Ask Codex to query the MCP servers; the failing request/trace in fixtures is `req-8812` / `trace-4401` (also `req-7777` / `trace-5602` for the 500).
 - Codex summarizes logs/traces and the config diff pointing at the rotated salt.
 - Codex applies the fix by aligning `runtime.active.json` to `runtime.good.json`.
 - Re-run login → success → navigate dashboard → push Jira update.
 - Reset to broken state anytime: `npm run demo:reset-broken`.
+
+### Fixture identifiers
+- CloudWatch log entries live in `fixtures/cloudwatch/auth-log.jsonl` and include `request_id` + `trace_id`.
+- Datadog traces live in `fixtures/datadog/traces.json` with the same IDs.
+- You won’t see these IDs in the browser UI or network tab; they’re in the mocked MCP data. Ask Codex to pull them via the MCP tools (e.g., `tail_errors` or `search_logs`), then follow the linked trace in Datadog.
 
 ## MCP tool reference
 All MCP servers speak stdio JSON-RPC (`Content-Length` framed) and read from `fixtures/`.
