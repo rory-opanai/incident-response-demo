@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Observability Logs | Incident Response Demo</title>
+    <link rel="stylesheet" href="/log.css" />
+  </head>
+  <body>
+    <div class="log-app">
+      <header class="log-header">
+        <div>
+          <p class="log-eyebrow">Incident Response Demo</p>
+          <h1>Observability Logs</h1>
+          <p class="log-subtitle">
+            CloudWatch + Datadog snapshots pulled from MCP fixtures.
+            <span class="log-timestamp" id="logTimestamp"></span>
+          </p>
+        </div>
+        <div class="log-actions">
+          <a class="log-link" href="/">Back to login</a>
+          <span class="log-chip">Mock data</span>
+        </div>
+      </header>
+
+      <div class="log-grid">
+        <section class="frame cw-frame" aria-labelledby="cwTitle">
+          <div class="frame-top cw-topbar">
+            <div class="cw-top-left">
+              <span class="cw-brand">AWS</span>
+              <span class="cw-title" id="cwTitle">CloudWatch Logs</span>
+            </div>
+            <div class="cw-top-right">
+              <span class="cw-pill">us-east-1</span>
+              <span class="cw-pill cw-pill-muted">Logs Insights</span>
+            </div>
+          </div>
+          <div class="cw-body">
+            <aside class="cw-sidebar">
+              <div class="cw-sidebar-header">
+                <p class="cw-section-title">Log groups</p>
+                <input class="cw-input" id="cwGroupFilter" type="text" placeholder="Filter groups" />
+              </div>
+              <div class="cw-group-list" id="cwGroups"></div>
+            </aside>
+            <div class="cw-main">
+              <div class="cw-toolbar">
+                <div class="cw-toolbar-row">
+                  <label class="cw-label" for="cwFilter">Filter events</label>
+                  <input
+                    class="cw-input"
+                    id="cwFilter"
+                    type="text"
+                    placeholder="status:500 request_id:req-8812"
+                  />
+                  <button class="cw-button" type="button">Apply</button>
+                </div>
+                <div class="cw-toolbar-meta">
+                  <span id="cwMeta"></span>
+                  <span class="cw-pill">Last 1 hour</span>
+                </div>
+              </div>
+              <div class="cw-table">
+                <div class="cw-table-header">
+                  <span>Timestamp</span>
+                  <span>Message</span>
+                  <span>Status</span>
+                  <span>Request</span>
+                </div>
+                <div class="cw-table-body" id="cwRows"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="frame dd-frame" aria-labelledby="ddTitle">
+          <div class="frame-top dd-topbar">
+            <div class="dd-top-left">
+              <span class="dd-brand">Datadog</span>
+              <span class="dd-title" id="ddTitle">Logs Explorer</span>
+            </div>
+            <div class="dd-top-right">
+              <span class="dd-pill">prod</span>
+              <span class="dd-pill dd-pill-muted">Live tail (mock)</span>
+            </div>
+          </div>
+          <div class="dd-body">
+            <div class="dd-searchbar">
+              <div class="dd-search">
+                <label class="dd-label" for="ddQuery">Search logs</label>
+                <input
+                  class="dd-input"
+                  id="ddQuery"
+                  type="text"
+                  value="service:auth-service"
+                  placeholder="service:auth-service status:error"
+                />
+                <div class="dd-query-tags" id="ddQueryTags"></div>
+              </div>
+              <div class="dd-search-actions">
+                <span class="dd-pill">Last 1 hour</span>
+                <button class="dd-button" type="button">Search</button>
+              </div>
+            </div>
+            <div class="dd-content">
+              <aside class="dd-sidebar">
+                <p class="dd-section-title">Facets</p>
+                <div class="dd-facets" id="ddFacets"></div>
+              </aside>
+              <div class="dd-main">
+                <div class="dd-histogram">
+                  <div class="dd-histogram-header">
+                    <span>Events</span>
+                    <span id="ddHistogramMeta"></span>
+                  </div>
+                  <div class="dd-bars" id="ddBars"></div>
+                </div>
+                <div class="dd-stream" id="ddStream"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="/log.js"></script>
+  </body>
+</html>

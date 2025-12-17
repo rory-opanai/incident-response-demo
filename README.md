@@ -1,6 +1,6 @@
 # Incident Response Demo
 
-Broken login after a bad release, mocked observability via MCP, Codex fixes it, then we prove the login works and close the loop.
+Broken login after a bad release, fixture-backed observability via MCP, Codex fixes it, then we prove the login works and close the loop.
 
 ## Prereqs
 - Node 18+ (tested with Node 24)
@@ -18,7 +18,7 @@ In separate terminals:
 # 1) App server
 npm start   # http://localhost:3000
 
-# 2) MCP servers (all at once) - All are mocked for now
+# 2) MCP servers (all at once) - CloudWatch/Datadog are fixtures-backed
 npm run start:mcps
 # or individually:
 # npm run start:mcp:cloudwatch
@@ -29,10 +29,10 @@ npm run start:mcps
 ## Demo flow (step-by-step)
 1) Reproduce the break: open http://localhost:3000, log in with the creds above → it fails (active config is broken).
 2) Ask Codex to pull latest errors from MCPs:
-   Prompt - "Pull the latest login errors from mock CloudWatch and summarize"
+   Prompt - "Pull the latest login errors from CloudWatch MCP and summarize"
             - this will return logs which will contain request IDs and trace IDs (e.g req-777, trace-5602)
    Ask Codex to follow up and get the specifics using the request and trace IDs
-   Prompt - "› Fetch the trace for trace-5602 and trace-4401 from mock Datadog"   
+   Prompt - "› Fetch the trace for trace-5602 and trace-4401 from Datadog MCP"
 
 3) Have Codex explain root cause
     Prompt - "summarise the issue you are seeing between Datadog and CloudWatch which is causing the user not to be able to
@@ -44,7 +44,7 @@ npm run start:mcps
 7) Narrate Jira/doc follow-ups from the dashboard cards.
 
 ## Prompts you can reuse
-- “Use the mock MCPs to pull the latest login errors from CloudWatch, the matching trace from Datadog, and the config diff. Summarize the root cause and apply the fix so login succeeds.”
+- “Use the MCPs to pull the latest login errors from CloudWatch, the matching trace from Datadog, and the config diff. Summarize the root cause and apply the fix so login succeeds.”
 - “After fixing, verify login at http://localhost:3000 succeeds, then summarize the RCA and next steps for Jira/docs/tests.”
 
 ## Fixture identifiers
@@ -53,25 +53,25 @@ npm run start:mcps
 - These IDs are not in the browser UI; surface them via MCP tools.
 
 ## MCP tool reference
-All mocked, stdio JSON-RPC (`Content-Length` framed), read-only from `fixtures/`.
+CloudWatch/Datadog are custom MCP servers (fixtures-backed); config remains mocked. All are stdio JSON-RPC (`Content-Length` framed), read-only from `fixtures/`, and log MCP calls to stderr.
 
 Example Codex CLI config:
 ```json
 {
   "mcpServers": {
-    "mock-cloudwatch": { "command": "node", "args": ["servers/mock-cloudwatch-mcp.js"] },
-    "mock-datadog": { "command": "node", "args": ["servers/mock-datadog-mcp.js"] },
+    "cloudwatch": { "command": "node", "args": ["servers/cloudwatch-mcp.js"] },
+    "datadog": { "command": "node", "args": ["servers/datadog-mcp.js"] },
     "mock-config": { "command": "node", "args": ["servers/mock-config-mcp.js"] }
   }
 }
 ```
 
-### mock-cloudwatch-mcp
+### cloudwatch
 - `search_logs({ request_id?, trace_id?, contains?, limit? })`
 - `tail_errors({ limit? })`
 Data: `fixtures/cloudwatch/auth-log.jsonl`
 
-### mock-datadog-mcp
+### datadog
 - `get_trace_by_request_id({ request_id })`
 - `summarize_errors({ since_minutes? })`
 Data: `fixtures/datadog/traces.json`

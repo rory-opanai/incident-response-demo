@@ -1,8 +1,8 @@
 import { spawn } from 'child_process';
 
 const processes = [
-  { name: 'cloudwatch', cmd: 'node', args: ['servers/mock-cloudwatch-mcp.js'] },
-  { name: 'datadog', cmd: 'node', args: ['servers/mock-datadog-mcp.js'] },
+  { name: 'cloudwatch', cmd: 'node', args: ['servers/cloudwatch-mcp.js'] },
+  { name: 'datadog', cmd: 'node', args: ['servers/datadog-mcp.js'] },
   { name: 'config', cmd: 'node', args: ['servers/mock-config-mcp.js'] }
 ];
 
@@ -19,7 +19,7 @@ processes.forEach((proc) => {
     process.stdout.write(`[${proc.name}] ${data}`);
   });
   child.stderr.on('data', (data) => {
-    process.stderr.write(`[${proc.name} ERROR] ${data}`);
+    process.stderr.write(`[${proc.name}][stderr] ${data}`);
   });
   child.on('exit', (code) => {
     process.stderr.write(`[${proc.name}] exited with code ${code}\n`);

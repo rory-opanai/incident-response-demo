@@ -8,10 +8,13 @@
     "dev": "NODE_ENV=development node src/server.js",
     "test": "node --test",
     "start:mcps": "node scripts/start-mcps.js",
-    "start:mcp:cloudwatch": "node servers/mock-cloudwatch-mcp.js",
-    "start:mcp:datadog": "node servers/mock-datadog-mcp.js",
+    "start:mcp:cloudwatch": "node servers/cloudwatch-mcp.js",
+    "start:mcp:datadog": "node servers/datadog-mcp.js",
     "start:mcp:config": "node servers/mock-config-mcp.js",
     "demo:apply-fix": "node scripts/set-config-state.js good",
     "demo:reset-broken": "node scripts/set-config-state.js broken"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.1"
   }
 }
