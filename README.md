@@ -17,13 +17,40 @@ In separate terminals:
 ```sh
 # 1) App server
 npm start   # http://localhost:3000
+```
+MCP servers are started by Codex when configured (no `npm run start:mcps` needed).
 
-# 2) MCP servers (all at once) - CloudWatch/Datadog are fixtures-backed
-npm run start:mcps
-# or individually:
-# npm run start:mcp:cloudwatch
-# npm run start:mcp:datadog
-# npm run start:mcp:config
+## MCP setup (Codex)
+Datadog and CloudWatch MCPs are mocked and read fixture data from this repo. Jira uses your own API token.
+
+Example Codex CLI config (add under `mcpServers`, adjust Jira entrypoint to your setup):
+```json
+{
+  "mcpServers": {
+    "cloudwatch": { "command": "node", "args": ["servers/cloudwatch-mcp.js"] },
+    "datadog": { "command": "node", "args": ["servers/datadog-mcp.js"] },
+    "mock-config": { "command": "node", "args": ["servers/mock-config-mcp.js"] },
+    "jira": {
+      "command": "node",
+      "args": ["<YOUR_JIRA_MCP_ENTRYPOINT_OR_BIN>"],
+      "env": {
+        "JIRA_BASE_URL": "https://your-domain.atlassian.net",
+        "JIRA_EMAIL": "you@example.com",
+        "JIRA_API_TOKEN": "<your-token>"
+      }
+    }
+  }
+}
+```
+
+### Codex setup prompt (copy/paste)
+```
+Please update my Codex MCP configuration to include:
+- cloudwatch: node servers/cloudwatch-mcp.js
+- datadog: node servers/datadog-mcp.js
+- mock-config: node servers/mock-config-mcp.js
+- jira: use my Jira MCP entrypoint/binary and set env vars JIRA_BASE_URL, JIRA_EMAIL, JIRA_API_TOKEN
+Then verify by listing the available MCP tools.
 ```
 
 ## Demo flow (step-by-step)
@@ -55,17 +82,6 @@ npm run start:mcps
 ## MCP tool reference
 CloudWatch/Datadog are custom MCP servers (fixtures-backed); config remains mocked. All are stdio JSON-RPC (`Content-Length` framed), read-only from `fixtures/`, and log MCP calls to stderr.
 
-Example Codex CLI config:
-```json
-{
-  "mcpServers": {
-    "cloudwatch": { "command": "node", "args": ["servers/cloudwatch-mcp.js"] },
-    "datadog": { "command": "node", "args": ["servers/datadog-mcp.js"] },
-    "mock-config": { "command": "node", "args": ["servers/mock-config-mcp.js"] }
-  }
-}
-```
-
 ### cloudwatch
 - `search_logs({ request_id?, trace_id?, contains?, limit? })`
 - `tail_errors({ limit? })`
@@ -81,7 +97,7 @@ Data: `fixtures/datadog/traces.json`
 - `diff_good_vs_active({})` → structural diff vs `runtime.good.json`
 Data: `fixtures/config/runtime.*.json`
 
-## Resetting states
+## Setup/reset scripts
 - Broken (demo start): `npm run demo:reset-broken`
 - Fixed (if you need to fast-forward): `npm run demo:apply-fix`
 To re-run the loop, stash/reset changes to `fixtures/config/runtime.active.json` then reset to broken.
