@@ -42,13 +42,21 @@ async function onSubmit(event) {
       body: JSON.stringify({ email, password })
     });
 
-    const data = await res.json();
+    // Parse defensively so non-JSON error responses do not look like network failures.
+    const raw = await res.text();
+    let data = {};
+    try {
+      data = raw ? JSON.parse(raw) : {};
+    } catch (parseError) {
+      console.warn('Unexpected non-JSON response from /api/login', parseError);
+      data = { ok: false, reason: 'invalid_response' };
+    }
 
     if (data.releaseTag) {
       setReleaseTag(data.releaseTag);
     }
 
-    if (!res.ok) {
+    if (!res.ok || data.ok === false) {
       renderError(data);
       return;
     }
@@ -66,7 +74,8 @@ function renderError(data) {
     invalid_password: 'Password does not match our records',
     unknown_user: 'User not found. Confirm the seeded accounts.',
     missing_salt: 'Auth salt missing from runtime config.',
-    internal_error: 'Auth service error.'
+    internal_error: 'Auth service error.',
+    invalid_response: 'Auth service returned an unexpected response.'
   };
   const message = messages[data?.reason] ?? 'Login failed.';
   statusEl.textContent = message;

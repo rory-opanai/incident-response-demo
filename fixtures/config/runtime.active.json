@@ -1,7 +1,7 @@
 {
-  "releaseTag": "release-2024.11.0",
+  "releaseTag": "release-2024.10.29",
   "auth": {
-    "salt": "demo-day-salt-v1-rotated",
+    "salt": "demo-day-salt-v1",
     "users": [
       {
         "email": "demo@example.com",
@@ -11,7 +11,7 @@
     ]
   },
   "features": {
-    "loginBanner": "Release v2024.11 deployed — monitoring in progress",
-    "dashboardCards": 3
+    "loginBanner": "Welcome back — status green",
+    "dashboardCards": 4
   }
 }
