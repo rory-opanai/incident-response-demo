@@ -68,11 +68,15 @@ Then verify by listing the available MCP tools.
 5) Have Codex apply the fix: 
     Prompt - "Please implement the required fix"
 6) Refresh and log in again → dashboard shows “Everything back online” with next steps cards.
-7) Narrate Jira/doc follow-ups from the dashboard cards.
+7) Use $incident-report-generator skill to summarise all the issues, fixes and root case analysis
 
 ## Prompts you can reuse
-- “Use the MCPs to pull the latest login errors from CloudWatch, the matching trace from Datadog, and the config diff. Summarize the root cause and apply the fix so login succeeds.”
-- “After fixing, verify login at http://localhost:3000 succeeds, then summarize the RCA and next steps for Jira/docs/tests.”
+- Tell me about all the ToDo tickets in Jira, specifically in the COD project and if there is an with P0 in the title
+- Ok great lets pick up COD-24, tell me more about it
+- Is there any relating logs ing CloudWatch or DataDog?
+- I checked out the login myself and have been able to reproduce it. Lets brainstorm on how we migh resolve this
+- Please implement the required code changes that need to take place to be able allow the user login again
+- $incident-report-generator
 
 ## Fixture identifiers
 - CloudWatch logs: `fixtures/cloudwatch/auth-log.jsonl` → has `request_id`/`trace_id`. Failing examples: `req-8812` / `trace-4401`, and `req-7777` / `trace-5602` (500).
@@ -99,7 +103,7 @@ Data: `fixtures/config/runtime.*.json`
 
 ## Setup/reset scripts
 - Broken (demo start): `npm run demo:reset-broken`
-- Fixed (if you need to fast-forward): `npm run demo:apply-fix`
+- Fixed (if you need to fast-forward): `npm run demo:apply-fix` otherwise leave Codex make the fix itself 
 To re-run the loop, stash/reset changes to `fixtures/config/runtime.active.json` then reset to broken.
 
 ## Tests
